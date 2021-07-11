@@ -8,7 +8,6 @@ const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
 
   const isLoggedIn = authCtx.isLoggedIn;
-  console.log(isLoggedIn);
 
   return (
     <header className={classes.header}>
