@@ -1,10 +1,15 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
+import AuthContext from "../../store/auth-context";
 
 import classes from "./AuthForm.module.css";
+
+const {REACT_APP_API_KEY} = process.env;
 
 const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+
+  const authCtx = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,10 +29,10 @@ const AuthForm = () => {
     let url;
     if (isLogin) {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDC57oa1wH8qNucmZTlAzMQH4cBtgu3LCM";
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${REACT_APP_API_KEY}`;
     } else {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDC57oa1wH8qNucmZTlAzMQH4cBtgu3LCM";
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${REACT_APP_API_KEY}`;
     }
     fetch(url, {
       method: "POST",
@@ -55,7 +60,8 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        console.log(data);
+        console.log(data.idToken)
+        authCtx.login(data.idToken);
       })
       .catch((err) => {
         alert(err.message);
